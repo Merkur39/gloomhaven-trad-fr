@@ -1,0 +1,36 @@
+{
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.eol": "\n",
+  "editor.tabSize": 2,
+  "todo-tree.tree.showCountsInTree": true,
+  "todo-tree.general.statusBar": "top three",
+  "todo-tree.general.tags": ["TODO", "FIX", "REVIEW"],
+  "todo-tree.filtering.excludeGlobs": ["node_modules", "build"],
+  "todo-tree.highlights.customHighlight": {
+    "TODO": {
+      "icon": "checklist",
+      "foreground": "#e67e22",
+      "type": "line"
+    },
+    "FIX": {
+      "icon": "alert",
+      "foreground": "#e74c3c",
+      "type": "line"
+    },
+    "REVIEW": {
+      "icon": "git-pull-request",
+      "foreground": "#f1c40f",
+      "type": "line"
+    }
+  },
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "[typescript]": {
+    "editor.formatOnSave": false
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  }
+}
