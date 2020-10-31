@@ -23,7 +23,8 @@ if (shouldIncludeLogger) {
   middleware.push(logger)
 }
 
-export const configuredStore = (initialState?: RootState) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const configuredStore = (initialState?: RootState): any => {
   // Create Store
   const store = configureStore({
     reducer: rootReducer,
