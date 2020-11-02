@@ -1,0 +1,19 @@
+.card-translated {
+  textarea {
+    background-color: $darkBlue;
+    border: none;
+    color: $lightGrey;
+    padding: 0.8rem;
+    width: 100%;
+    resize: vertical;
+    border: 1px solid $grey;
+    overflow: hidden;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+
+    &:focus {
+      outline: none;
+      background-color: $lightBlue;
+    }
+  }
+}

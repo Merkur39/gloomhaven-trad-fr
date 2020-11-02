@@ -1,0 +1,23 @@
+.upload-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  input {
+    display: none;
+  }
+
+  label {
+    background-color: $white;
+    border-radius: 0.5rem;
+    color: $lightBlue;
+    padding: 0.5rem 1rem;
+  }
+
+  .filename {
+    padding: 0.5rem 0 0;
+  }
+}
