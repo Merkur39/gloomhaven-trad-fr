@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import TextareaAutosize from 'react-textarea-autosize'
 import { ContentState } from '../../models'
-import { addContentFile } from '../../store/actions'
+import { updateContentFile } from '../../store/actions'
 
 const Textarea = ({ fileContent }: { fileContent: ContentState }): JSX.Element => {
   const dispatch = useDispatch()
@@ -11,7 +11,7 @@ const Textarea = ({ fileContent }: { fileContent: ContentState }): JSX.Element =
 
   const onBlur = () => {
     setState(state.trim())
-    dispatch(addContentFile({ ...fileContent, textTranslated: state.trim() }))
+    dispatch(updateContentFile({ ...fileContent, textTranslated: state.trim() }))
   }
 
   const onChange = (evt: ChangeEvent<HTMLTextAreaElement>) => setState(evt.target.value)

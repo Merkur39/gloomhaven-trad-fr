@@ -13,10 +13,10 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "allowJs": true
+    "allowJs": true,
   },
   "exclude": [
-    "test",
+    "app/test",
     "release",
     "app/main.prod.js",
     "app/renderer.prod.js",

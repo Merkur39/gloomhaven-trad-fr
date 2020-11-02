@@ -1,5 +1,5 @@
 import { RootState } from '../store'
-import { ADD_CONTENT_FILE, ADD_FILE, CLEAN_FILE } from '../store/actions'
+import { UPDATE_CONTENT_FILE, ADD_FILE, CLEAN_FILE } from '../store/actions'
 
 export interface ContentState {
   category: string
@@ -20,12 +20,12 @@ export interface FileState {
 }
 
 export interface FileAction {
-  type: typeof ADD_FILE | typeof ADD_CONTENT_FILE | typeof CLEAN_FILE
+  type: typeof ADD_FILE | typeof UPDATE_CONTENT_FILE | typeof CLEAN_FILE
   payload: any
 }
 
 export interface RootGloomhavenReducer {
-  gloomhavenFile: (state: FileState, action: FileAction) => FileState
+  gloomhavenFile: (state: FileState | undefined, action: FileAction) => FileState
 }
 
 export interface GlobalState {

@@ -1,7 +1,7 @@
 import { FileAction, FileState } from '../../models'
-import { ADD_FILE, ADD_CONTENT_FILE, CLEAN_FILE } from '../actions/file.action'
+import { ADD_FILE, UPDATE_CONTENT_FILE, CLEAN_FILE } from '../actions/file.action'
 
-const INIT_STATE: FileState = {
+export const INIT_STATE: FileState = {
   name: null,
   path: null,
   lastModified: null,
@@ -24,12 +24,12 @@ const fileReducer = (state = INIT_STATE, action: FileAction): FileState => {
         content,
       }
 
-    case ADD_CONTENT_FILE:
-      const elementsIndex = state.content.findIndex((c) => c.id == action.payload.id)
+    case UPDATE_CONTENT_FILE:
+      const elementsIndex = state.content.findIndex((content) => content.id == action.payload.id)
       if (elementsIndex >= 0) {
-        const newArray = [...state.content]
-        newArray[elementsIndex] = { ...newArray[elementsIndex], textTranslated: action.payload.textTranslated }
-        return { ...state, content: newArray }
+        const newContent = [...state.content]
+        newContent[elementsIndex] = { ...newContent[elementsIndex], textTranslated: action.payload.textTranslated }
+        return { ...state, content: newContent }
       }
 
       return state
