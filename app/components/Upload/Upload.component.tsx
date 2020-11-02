@@ -15,8 +15,8 @@ const Upload = (): JSX.Element => {
 
       const reader = new FileReader()
       reader.readAsText(file)
-      reader.onload = (e) => {
-        const content = JSON.parse((e.target as FileReader).result as string)
+      reader.onload = (evt) => {
+        const content = JSON.parse((evt.target as FileReader).result as string)
         if (!content) throw 'Upload error'
 
         dispatch(addFile({ name, path, lastModified, size, type, content }))

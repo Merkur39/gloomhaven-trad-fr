@@ -5,12 +5,12 @@ import Form from '../Form/Form.component'
 import { FileState, GlobalState } from '../../models'
 
 const Home = (): JSX.Element => {
-  const gloomhavenFile: FileState = useSelector((state: GlobalState) => state.gloomhavenFile)
+  const { content: fileContentList }: FileState = useSelector((state: GlobalState) => state.gloomhavenFile)
 
   return (
     <>
       <Upload />
-      {gloomhavenFile.content && gloomhavenFile.content.length > 0 && <Form contentList={gloomhavenFile.content} />}
+      {fileContentList && fileContentList.length > 0 && <Form />}
     </>
   )
 }
