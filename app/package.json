@@ -4,6 +4,9 @@
   "version": "0.1.0",
   "description": "Application Electron pour gérer simplement la traduction FR du jeu Gloomhaven",
   "main": "./main.prod.js",
+  "author": {
+    "name": "Merkur39"
+  },
   "scripts": {
     "electron-rebuild": "node -r ../internals/scripts/BabelRegister.js ../internals/scripts/ElectronRebuild.js",
     "postinstall": "yarn electron-rebuild"
