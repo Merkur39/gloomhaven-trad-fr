@@ -10,7 +10,7 @@ const Home = (): JSX.Element => {
 
   useEffect(() => {
     const checkKeyDown = (evt: KeyboardEvent) => {
-      if (evt.key === 's' && evt.ctrlKey) {
+      if (evt.key === 's' && evt.ctrlKey && name) {
         ipcRenderer.send('saveFile', { name, path, fileContentList })
       }
     }
