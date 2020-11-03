@@ -1,7 +1,6 @@
 import React, { FormEvent } from 'react'
+import { ipcRenderer } from 'electron'
 import { useSelector } from 'react-redux'
-import { remote } from 'electron'
-import { writeFile } from 'fs'
 import Textarea from '../Textarea/Textarea.component'
 import { ContentState, GlobalState } from '../../models'
 
@@ -11,33 +10,7 @@ const Form = (): JSX.Element => {
   const onSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
 
-    remote.dialog
-      .showSaveDialog({
-        title: 'Sauvegarder le fichier',
-        defaultPath: path || '',
-        buttonLabel: 'Sauvegarder',
-        filters: [
-          {
-            name: name || '',
-            extensions: ['json'],
-          },
-        ],
-      })
-      .then((file) => {
-        if (!file.canceled) {
-          writeFile((file.filePath as string).toString(), JSON.stringify(fileContentList), (err) => {
-            if (err) throw err
-            const notif = {
-              title: 'Sauvegarde effectuée',
-              body: (file.filePath as string).toString(),
-            }
-            new remote.Notification(notif).show()
-          })
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    ipcRenderer.send('saveFile', { name, path, fileContentList })
   }
 
   return (
