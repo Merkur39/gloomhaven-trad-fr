@@ -4,7 +4,7 @@
     "name": "Merkur39"
   },
   "productName": "GloomhavenTradFR",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Application Electron pour gérer simplement la traduction FR du jeu Gloomhaven",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -181,7 +181,6 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.20.6",
-    "eslint-plugin-react-hooks": "^4.2.0",
     "file-loader": "^6.0.0",
     "husky": "^4.2.5",
     "identity-obj-proxy": "^3.0.0",

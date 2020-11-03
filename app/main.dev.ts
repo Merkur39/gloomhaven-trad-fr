@@ -11,24 +11,57 @@
  */
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
-import path from 'path'
-import { app, BrowserWindow } from 'electron'
-import { autoUpdater } from 'electron-updater'
-import log from 'electron-log'
+import { join } from 'path'
+import { writeFile } from 'fs'
+import { app, BrowserWindow, ipcMain, dialog, Notification } from 'electron'
+// import { autoUpdater } from 'electron-updater'
+// import log from 'electron-log'
 import MenuBuilder from './menu'
 
-// FIX Temporary
-// app.allowRendererProcessReuse = false
-
-export default class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info'
-    autoUpdater.logger = log
-    autoUpdater.checkForUpdatesAndNotify()
-  }
-}
+// export default class AppUpdater {
+//   constructor() {
+//     log.transports.file.level = 'info'
+//     autoUpdater.logger = log
+//     autoUpdater.checkForUpdatesAndNotify()
+//   }
+// }
 
 let mainWindow: BrowserWindow | null = null
+
+const saveFile = (evt: Electron.IpcMainEvent, args: any) => {
+  evt.preventDefault()
+  const { path, name, fileContentList } = args
+
+  dialog
+    .showSaveDialog({
+      title: 'Sauvegarder le fichier',
+      defaultPath: path || '',
+      buttonLabel: 'Sauvegarder',
+      filters: [
+        {
+          name: name || '',
+          extensions: ['json'],
+        },
+      ],
+    })
+    .then((file) => {
+      if (!file.canceled) {
+        writeFile((file.filePath as string).toString(), JSON.stringify(fileContentList), (err) => {
+          if (err) throw err
+          const notif = {
+            title: 'Sauvegarde effectuée',
+            body: (file.filePath as string).toString(),
+          }
+          new Notification(notif).show()
+        })
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
+ipcMain.on('saveFile', saveFile)
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support')
@@ -52,10 +85,10 @@ const createWindow = async () => {
     await installExtensions()
   }
 
-  const RESOURCES_PATH = app.isPackaged ? path.join(process.resourcesPath, 'resources') : path.join(__dirname, '../resources')
+  const RESOURCES_PATH = app.isPackaged ? join(process.resourcesPath, 'resources') : join(__dirname, '../resources')
 
   const getAssetPath = (...paths: string[]): string => {
-    return path.join(RESOURCES_PATH, ...paths)
+    return join(RESOURCES_PATH, ...paths)
   }
 
   mainWindow = new BrowserWindow({
@@ -69,14 +102,14 @@ const createWindow = async () => {
             nodeIntegration: true,
           }
         : {
-            preload: path.join(__dirname, 'dist/renderer.prod.js'),
+            preload: join(__dirname, 'dist/renderer.prod.js'),
           },
   })
 
   mainWindow.loadURL(`file://${__dirname}/app.html`)
 
   // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+  // https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined')
