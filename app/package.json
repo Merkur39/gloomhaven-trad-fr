@@ -1,7 +1,7 @@
 {
   "name": "gloomhaven-traduction-fr",
   "productName": "GloomhavenTradFR",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Application Electron pour gérer simplement la traduction FR du jeu Gloomhaven",
   "main": "./main.prod.js",
   "author": {

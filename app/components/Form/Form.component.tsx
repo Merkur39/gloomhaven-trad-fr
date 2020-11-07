@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import { ipcRenderer } from 'electron'
 import { useSelector } from 'react-redux'
 import Textarea from '../Textarea/Textarea.component'
@@ -6,6 +6,22 @@ import { ContentState, GlobalState } from '../../models'
 
 const Form = (): JSX.Element => {
   const { name, path, content: fileContentList } = useSelector((state: GlobalState) => state.gloomhavenFile)
+  const [disabled, setDisabled] = useState(false)
+
+  useEffect(() => {
+    const setDisabledBtn = (bool: boolean) => setDisabled(bool)
+    const sendCurrentContentFile = () => ipcRenderer.send('saveFile', { name, path, fileContentList, quitAfter: true })
+
+    ipcRenderer.on('setdisabled-true', () => setDisabledBtn(true))
+    ipcRenderer.on('setdisabled-false', () => setDisabledBtn(false))
+    ipcRenderer.on('getDataForSaveBeforeQuit', () => sendCurrentContentFile())
+
+    return () => {
+      ipcRenderer.removeListener('setdisabled-true', setDisabledBtn)
+      ipcRenderer.removeListener('setdisabled-false', setDisabledBtn)
+      ipcRenderer.removeListener('getDataForSaveBeforeQuit', sendCurrentContentFile)
+    }
+  }, [ipcRenderer, name, path, fileContentList])
 
   const onSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
@@ -34,7 +50,7 @@ const Form = (): JSX.Element => {
         )
       })}
       <div className='bottom-bar'>
-        <input type='submit' id='save' value='Sauvegarder' />
+        <input type='submit' id='save' value='Sauvegarder' disabled={disabled} />
       </div>
     </form>
   )

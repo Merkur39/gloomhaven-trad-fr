@@ -4,7 +4,7 @@
     "name": "Merkur39"
   },
   "productName": "GloomhavenTradFR",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Application Electron pour gérer simplement la traduction FR du jeu Gloomhaven",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
