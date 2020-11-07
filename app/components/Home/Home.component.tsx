@@ -23,7 +23,7 @@ const Home = (): JSX.Element => {
   return (
     <>
       <Upload />
-      {fileContentList && fileContentList.length > 0 && <Form />}
+      {fileContentList.length > 0 && <Form />}
     </>
   )
 }

@@ -27,10 +27,16 @@ import MenuBuilder from './menu'
 // }
 
 let mainWindow: BrowserWindow | null = null
+app.allowRendererProcessReuse = true
+let fileSaved = true
 
-const saveFile = (evt: Electron.IpcMainEvent, args: any) => {
+const saveFile = (
+  evt: Electron.IpcMainEvent,
+  args: { path: string; name: string; fileContentList: Array<Record<string, unknown>>; quitAfter?: boolean }
+): void => {
   evt.preventDefault()
-  const { path, name, fileContentList } = args
+  const { path, name, fileContentList, quitAfter } = args
+  mainWindow && mainWindow.webContents.send('setdisabled-true')
 
   dialog
     .showSaveDialog({
@@ -45,14 +51,21 @@ const saveFile = (evt: Electron.IpcMainEvent, args: any) => {
       ],
     })
     .then((file) => {
+      mainWindow && mainWindow.webContents.send('setdisabled-false')
       if (!file.canceled) {
         writeFile((file.filePath as string).toString(), JSON.stringify(fileContentList), (err) => {
           if (err) throw err
+          fileSaved = true
           const notif = {
             title: 'Sauvegarde effectuée',
             body: (file.filePath as string).toString(),
           }
           new Notification(notif).show()
+
+          if (quitAfter)
+            setTimeout(() => {
+              quitApp()
+            }, 1000)
         })
       }
     })
@@ -61,7 +74,12 @@ const saveFile = (evt: Electron.IpcMainEvent, args: any) => {
     })
 }
 
-ipcMain.on('saveFile', saveFile)
+const quitApp = () => {
+  mainWindow = null
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+}
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support')
@@ -122,9 +140,31 @@ const createWindow = async () => {
     }
   })
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
+  mainWindow.on('close', function (e) {
+    if (mainWindow && !fileSaved) {
+      e.preventDefault()
+
+      dialog
+        .showMessageBox(mainWindow, {
+          type: 'question',
+          buttons: ['Yes', 'No'],
+          title: 'Confirm',
+          message: 'Sauvegarder vos modifications ?',
+        })
+        .then((c) => {
+          if (c.response === 0) {
+            mainWindow && mainWindow.webContents.send('getDataForSaveBeforeQuit')
+          }
+          if (c.response === 1) quitApp()
+        })
+    } else {
+      quitApp()
+    }
   })
+
+  // mainWindow.on('closed', () => {
+  //   mainWindow = null
+  // })
 
   const menuBuilder = new MenuBuilder(mainWindow)
   menuBuilder.buildMenu()
@@ -137,6 +177,16 @@ const createWindow = async () => {
 /**
  * Add event listeners...
  */
+ipcMain.setMaxListeners(5)
+
+ipcMain.on('setFileSaved', (_evt: Electron.IpcMainEvent, bool: boolean) => {
+  fileSaved = bool
+})
+
+ipcMain.on('setdisabled', (_evt: Electron.IpcMainEvent, bool: boolean) => {
+  bool ? mainWindow && mainWindow.webContents.send('setdisabled-true') : mainWindow && mainWindow.webContents.send('setdisabled-false')
+})
+ipcMain.on('saveFile', saveFile)
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even

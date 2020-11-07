@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron'
 import React, { ChangeEvent, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import TextareaAutosize from 'react-textarea-autosize'
@@ -16,6 +17,8 @@ const Textarea = ({ fileContent }: { fileContent: ContentState }): JSX.Element =
     setState(state.trim())
 
     if (state.trim() !== oldState) {
+      // TODO
+      // ipcRenderer.send('setFileSaved', false)
       hasChanged = true
       setOldState(state.trim())
     }
