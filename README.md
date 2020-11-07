@@ -1,4 +1,4 @@
-# Gloomhaven-trad-fr
+# Gloomhaven Traduction FR
 
 Petite application pour faciliter [la traduction du jeu vidéo Gloomhaven](https://steamcommunity.com/sharedfiles/filedetails/?id=2093279998).
 
